@@ -15,11 +15,11 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE, }
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 setwd("C:/Users/RendelldeKort/Cornerstone Economics/Internal - Documents/ADMINISTRATION/WAB")
 library(quantmod)
 library(dygraphs)
-library(Quandl)
+# Helps with the tsible/xts
 library(tydygraphs)
 # Data manipulation and plotting functions
 library(tidyverse)
@@ -34,18 +34,12 @@ CPI_US <- CPALTT01USM661S
 rm(CPALTT01USM661S)
 WAB<-read.csv("WAB.csv", stringsAsFactors = FALSE)
 
-
-
-
-
 #Mutate
 WAB$Index<-as.Date(WAB$Index)
 WAB %>%
 mutate(Month = yearmonth(Index)) %>%
 as_tsibble(index = Index,
            key=Country)
-
-
 ```
 
 
@@ -55,28 +49,24 @@ WAB <- mutate(WAB, Hotel= rowMeans(select(WAB,
                                               c(Hotel_1,
                                                 Hotel_2,
                                                 Hotel_3,
-                                                Hotel_4)), na.rm = TRUE))
+                                                Hotel_4,
+                                                Hotel_5,
+                                                Hotel_6,
+                                                Hotel_7)), na.rm = TRUE))
 WAB$Meal<-WAB$Meal_cheap*2+WAB$Meal_mid/2
 
 WAB$COVID<-WAB$COVID_intest+WAB$COVID_masks+WAB$COVID_outtest
 
-WAB$Total_cost<-  WAB$Hotel*7+ 
-                  WAB$Taxi*2+
-              WAB$Meal*7+
-              WAB$Water*7+
-              WAB$Beer*7+
-              WAB$Cappucino*7+
-              WAB$COVID_intest+
-              WAB$COVID_outtest+
-              WAB$COVID_mask
-
-## Weights
-
-
-
+# WAB$Total_cost<-  WAB$Hotel*7+                                                      # Need to double check this one.
+#                  WAB$Taxi*2+
+#              WAB$Meal*7+
+ #             WAB$Water*7+
+ #             WAB$Beer*7+
+ #             WAB$Cappucino*7+
+#              WAB$COVID_intest+
+ #             WAB$COVID_outtest+
+#              WAB$COVID_mask
 ```
-
-
 
 ## Summary
 ```{r, message=FALSE, echo=FALSE}
@@ -85,10 +75,6 @@ WAB %>%
   dygraph(Water, main = "Aruba - Water") %>% 
   dyRangeSelector()
 ```
-
-
-
-
 
 ## Methodological note
 
@@ -112,7 +98,6 @@ All data are collected in US$. Where needed the local currency is converted (bot
 (3) Mc Donalds meals, mid-price tbc (Check manually)
 (4) From supermarket (Superfood, van Tweel) beverages (a two-liter bottle of water, one Heineken, and one coffee per day)
 (5) COVID Hygiene - test for exit (if required), masks, hand sanitizers?
-
 
 Data sources
 
