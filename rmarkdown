@@ -49,15 +49,26 @@ as_tsibble(index = Index,
 ```
 
 
-```{r}
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 # Manipulation
-#preliminary manipulation
-WAB <- mutate(WAB, Hotel_avg = rowMeans(select(WAB,
+WAB <- mutate(WAB, Hotel= rowMeans(select(WAB,
                                               c(Hotel_1,
                                                 Hotel_2,
                                                 Hotel_3,
                                                 Hotel_4)), na.rm = TRUE))
+WAB$Meal<-WAB$Meal_cheap*2+WAB$Meal_mid/2
 
+WAB$COVID<-WAB$COVID_intest+WAB$COVID_masks+WAB$COVID_outtest
+
+WAB$Total_cost<-  WAB$Hotel*7+ 
+                  WAB$Taxi*2+
+              WAB$Meal*7+
+              WAB$Water*7+
+              WAB$Beer*7+
+              WAB$Cappucino*7+
+              WAB$COVID_intest+
+              WAB$COVID_outtest+
+              WAB$COVID_mask
 
 ## Weights
 
@@ -71,10 +82,9 @@ WAB <- mutate(WAB, Hotel_avg = rowMeans(select(WAB,
 ```{r, message=FALSE, echo=FALSE}
 WAB %>% 
   filter(Country == "AUA") %>% 
-  dygraph(Water)
+  dygraph(Water, main = "Aruba - Water") %>% 
+  dyRangeSelector()
 ```
-
-
 
 
 
@@ -96,7 +106,7 @@ Expenditures are composed of:
 (4) and beverages (a two liter bottle of water, one imported beer, and one coffee per day).
 
 Adapted methodology
-
+All data are collected in US$. Where needed the local currency is converted (both for CUR and AUA at Afl. 1.79 to 1 US dollar).
 (1) Hotel: Travelocity (Courtyard by Marriott)
 (2) Call and check manually taxi airport-hotel
 (3) Mc Donalds meals, mid-price tbc (Check manually)
@@ -105,12 +115,6 @@ Adapted methodology
 
 
 Data sources
-
-
-
-
-
-
 
 ```{r, echo=FALSE}
 library(BRRR)
