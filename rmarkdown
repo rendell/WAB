@@ -1,0 +1,101 @@
+---
+title: "Week at the Beach report"
+author: "Lovely Data"
+date: "12/5/2021"
+output: html_document
+---
+
+<center>
+
+![](C:/Users/RendelldeKort/Pictures/LovelyData.jpg){width=300px, height=300px}
+
+</center>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, }
+setwd("C:/Users/RendelldeKort/Cornerstone Economics/Internal - Documents/ADMINISTRATION/WAB")
+library(quantmod)
+library(dygraphs)
+library(Quandl)
+library(tydygraphs)
+# Data manipulation and plotting functions
+library(tidyverse)
+# Time series manipulation
+library(tsibble)
+# Time series graphics and statistics
+library(feasts)
+
+# Get data
+getSymbols('CPALTT01USM661S',src='FRED')
+CPI_US <- CPALTT01USM661S
+rm(CPALTT01USM661S)
+WAB<-read.csv("WAB.csv", stringsAsFactors = FALSE)
+
+
+
+#Mutate
+WAB$Index<-as.Date(WAB$Index)
+WAB %>%
+mutate(Month = yearmonth(Index)) %>%
+as_tsibble(index = Index,
+           key=Country)
+
+
+```
+
+
+
+
+
+## Summary
+```{r, message=FALSE, echo=FALSE}
+WAB %>% 
+  filter(Country == "AUA") %>% 
+  dygraph(Water)
+```
+
+
+
+
+
+
+
+## Methodological note
+
+### Introduction
+To construct an index based on the core costs of spending one week at the beach, three broad  cost categories are compiled based on 2014 data from a common source across all countries.  The categories comprise costs for hotel, food, and transportation. For example, hotel rates are  based on the average room rate for three star hotels as determined by Travelocity.
+
+The real effective exchange rate is commonly used as a measure of change in aggregate external competitiveness. Creating an index based on an identical basket of goods and/or services is another way to assess relative costs. 
+
+### Data sources
+The prices and data are drawn from a common source so as to minimize quality variation. 
+Expenditures are composed of: 
+(1) the average room rate in a three star hotel (as rated by one tour operator (Travelocity))
+(2) average taxi fare between the airport and hotel
+(3) two inexpensive meals and one mid-price meal
+(4) and beverages (a two liter bottle of water, one imported beer, and one coffee per day).
+
+Adapted methodology
+
+(1) Hotel: Travelocity (Courtyard by Marriott)
+(2) Call and check manually taxi airport-hotel
+(3) Mc Donalds meals, mid-price tbc (Check manually)
+(4) From supermarket (Superfood, van Tweel) beverages (a two-liter bottle of water, one Heineken, and one coffee per day)
+(5) COVID Hygiene - test for exit (if required), masks, hand sanitizers?
+
+
+Data sources
+
+
+
+
+
+
+
+```{r, echo=FALSE}
+library(BRRR)
+skrrrahh(sound = 24)
+```
