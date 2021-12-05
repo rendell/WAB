@@ -36,6 +36,8 @@ WAB<-read.csv("WAB.csv", stringsAsFactors = FALSE)
 
 
 
+
+
 #Mutate
 WAB$Index<-as.Date(WAB$Index)
 WAB %>%
@@ -47,6 +49,21 @@ as_tsibble(index = Index,
 ```
 
 
+```{r}
+# Manipulation
+#preliminary manipulation
+WAB <- mutate(WAB, Hotel_avg = rowMeans(select(WAB,
+                                              c(Hotel_1,
+                                                Hotel_2,
+                                                Hotel_3,
+                                                Hotel_4)), na.rm = TRUE))
+
+
+## Weights
+
+
+
+```
 
 
 
